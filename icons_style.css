@@ -1,0 +1,748 @@
+/* Стили иконок main */
+div[class^="icon_wrap"] {
+  aspect-ratio: 1;
+  align-content: center;
+  flex-shrink: 0;
+  text-align: center;
+  border: var(--outline);
+  border-radius: 100%;
+  cursor: pointer;
+  background-color: inherit;
+}
+/* Кнопка с иконкой */
+button[class^="icon_wrap"] {
+  align-content: center;
+  flex-shrink: 0;
+  font: inherit;
+  text-align: center;
+  border: var(--outline);
+  background-color: inherit;
+}
+[class^="icon_wrap"][class*="size_s"] {
+  --scale-size: calc(40 / 60);
+  height: var(--icon-size-s);
+}
+[class^="icon_wrap"][class*="size_m"] {
+  --scale-size: calc(50 / 60);
+  height: var(--icon-size-m);
+}
+[class^="icon_wrap"][class*="size_base"] {
+  --scale-size: 1;
+  height: var(--icon-size);
+}
+[class^="icon_wrap"][class*="size_xl"] {
+  --scale-size: calc(90 / 60);
+  height: var(--icon-size-xl);
+}
+[class^="icon_wrap"][class*="scale"] {
+  &
+    > :where(
+      div[class^="icon_notification"],
+      div[class^="icon_edit"],
+      div[class^="icon_remove"],
+      div[class^="icon_close"],
+      div[class^="icon_menu"],
+      div[class^="icon_calendar"],
+      div[class^="icon_arrow"],
+      div[class^="icon_toggle"],
+      div[class^="icon_create"],
+      div[class^="icon_check"]
+    ) {
+    scale: var(--scale-size);
+  }
+}
+[class^="icon_wrap"][class*="big_shape"] {
+  --icon-shape: 0.3rem;
+}
+[class^="icon_wrap"][class*="inv_color"] {
+  --color-cover: oklch(0.12 0.01 260);
+  --color-font-primary: oklch(0.95 0 0);
+  /* Тёмная тема */
+  @media (prefers-color-scheme: dark) {
+    --color-cover: oklch(0.95 0 0);
+    --color-font-primary: oklch(0.12 0.01 260);
+  }
+}
+
+/* Стили иконок */
+div[class^="icon_notification"],
+div[class^="icon_edit"],
+div[class^="icon_remove"],
+div[class^="icon_close"],
+div[class^="icon_menu"],
+div[class^="icon_calendar"],
+div[class^="icon_arrow"],
+div[class^="icon_toggle"],
+div[class^="icon_create"],
+div[class^="icon_check"] {
+  margin: auto;
+  height: 100%;
+  aspect-ratio: 1;
+  position: relative;
+  align-content: center;
+  z-index: 1;
+}
+
+.icons_cover {
+  margin: auto;
+  padding: 3rem;
+  max-width: calc((3rem * 2) + (var(--icon-size-m) * 6) + (1rem * 5) + 2px);
+  height: fit-content;
+  display: flex;
+  justify-content: flex-start;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  position: fixed;
+  inset: auto auto 6rem 6rem;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  z-index: 9999;
+  & > div[class^="icon_wrap"] {
+    --icon-cover: var(--color-cover-item);
+    background-color: var(--icon-cover);
+  }
+}
+
+/* Стили для иконки горизонтального и вертикального меню */
+div[class^="icon_menu"][class*="dots"] {
+  & .icon_item {
+    margin: auto;
+    width: calc(var(--icon-shape) * 2);
+    height: calc(var(--icon-shape) * 2);
+    border-radius: 100%;
+    position: relative;
+    background-color: var(--color-font-primary);
+    /* Создание трех точек с помощью псевдоэлементов */
+    &::before,
+    &::after {
+      content: "";
+      margin: auto;
+      width: inherit;
+      height: inherit;
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background-color: inherit;
+    }
+  }
+}
+/* Гоизонтальное меню */
+div[class^="icon_menu"][class*="horizontal"] {
+  & .icon_item {
+    &::before {
+      translate: -1rem 0;
+    }
+    &::after {
+      translate: 1rem 0;
+    }
+  }
+}
+/*  Вертикальное меню */
+div[class^="icon_menu"][class*="vertical"] {
+  & .icon_item {
+    &::before {
+      translate: 0 -1rem;
+    }
+    &::after {
+      translate: 0 1rem;
+    }
+  }
+}
+
+/* Стили для иконки меню */
+div[class^="icon_wrap"]:hover {
+  & div[class^="icon_menu"][class*="line"] {
+    & .icon_item {
+      background-color: transparent;
+      &::before,
+      &::after {
+        transition-delay: 0s, var(--main-animation-speed);
+      }
+      &::before {
+        translate: 0 0;
+        rotate: -45deg;
+      }
+      &::after {
+        translate: 0 0;
+        rotate: 45deg;
+      }
+    }
+  }
+}
+div[class^="icon_menu"][class*="line"] {
+  --icon-shape: 0.22rem;
+  & .icon_item {
+    margin: auto;
+    width: 2.4rem;
+    height: var(--icon-shape);
+    position: absolute;
+    inset: 0;
+    border-radius: 100vmax;
+    background-color: var(--color-font-primary);
+    transition: background-color 0s var(--main-animation-speed);
+    &::before,
+    &::after {
+      content: "";
+      margin: auto;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background-color: var(--color-font-primary);
+      transition: translate var(--main-animation-speed)
+          var(--main-animation-function) var(--main-animation-speed),
+        rotate var(--main-animation-speed) var(--main-animation-function) 0s;
+      will-change: translate, rotate;
+    }
+    &::before {
+      translate: 0 -0.7rem;
+    }
+    &::after {
+      translate: 0 0.7rem;
+    }
+  }
+}
+
+/* Стили для иконки стрелки */
+div[class^="icon_wrap"]:hover {
+  /* поворот */
+  &
+    :where(
+      div[class^="icon_arrow"][class*="bottom"][class*="rotate"],
+      div[class^="icon_arrow"][class*="top"][class*="rotate"]
+    ) {
+    rotate: x 180deg;
+  }
+  &
+    :where(
+      div[class^="icon_arrow"][class*="left"][class*="rotate"],
+      div[class^="icon_arrow"][class*="right"][class*="rotate"]
+    ) {
+    rotate: y 180deg;
+  }
+  /* движение */
+  & div[class^="icon_arrow"][class*="bottom"][class*="move"] {
+    translate: 0 0.3rem;
+  }
+  & div[class^="icon_arrow"][class*="top"][class*="move"] {
+    translate: 0 -0.3rem;
+  }
+  & div[class^="icon_arrow"][class*="left"][class*="move"] {
+    translate: -0.3rem 0;
+  }
+  & div[class^="icon_arrow"][class*="right"][class*="move"] {
+    translate: 0.3rem 0;
+  }
+  /* растягивание */
+  & div[class^="icon_arrow"][class*="stretch"] {
+    & .icon_item {
+      &::before {
+        animation: icon-scale-zoom-x var(--main-animation-speed)
+          var(--main-animation-function);
+      }
+      &::after {
+        animation: icon-scale-zoom-y var(--main-animation-speed)
+          var(--main-animation-function);
+      }
+    }
+  }
+}
+
+/* анимации растягивания */
+@keyframes icon-scale-zoom-x {
+  0% {
+    scale: 1;
+  }
+  40% {
+    scale: 1 2.5;
+  }
+  100% {
+    scale: 1;
+  }
+}
+@keyframes icon-scale-zoom-y {
+  0% {
+    scale: 1;
+  }
+  40% {
+    scale: 2.5 1;
+  }
+  100% {
+    scale: 1;
+  }
+}
+/* анимации in zoom */
+div[class^="icon_wrap"]:hover {
+  & div[class^="icon"][class*="in_zoom"] {
+    .icon_item {
+      animation: icon-in-zoom 0.6s
+        var(--main-animation-function);
+    }
+  }
+}
+@keyframes icon-in-zoom {
+  0% {
+    scale: 1;
+  }
+  60% {
+    scale: 1.3;
+  }
+  100% {
+    scale: 1;
+  }
+}
+
+div[class^="icon_arrow"] {
+  --icon-shape: 0.22rem;
+  transition: translate var(--main-animation-speed)
+      var(--main-animation-function),
+    rotate var(--main-animation-speed) var(--main-animation-function);
+  will-change: translate, rotate;
+  & .icon_item {
+    margin: auto;
+    width: 1.8rem;
+    height: 1.8rem;
+    position: relative;
+    &::before,
+    &::after {
+      content: "";
+      margin: auto;
+      position: absolute;
+      inset: auto 0 0 auto;
+      border-radius: 100vmax;
+      background-color: var(--color-font-primary);
+    }
+    &::before {
+      width: 100%;
+      height: var(--icon-shape);
+      transform-origin: center bottom;
+    }
+    &::after {
+      width: var(--icon-shape);
+      height: 100%;
+      transform-origin: right center;
+    }
+  }
+}
+div[class^="icon_arrow"][class*="bottom"] {
+  & .icon_item {
+    translate: 0 -0.3rem;
+    rotate: 45deg;
+  }
+}
+div[class^="icon_arrow"][class*="top"] {
+  & .icon_item {
+    translate: 0 0.3rem;
+    rotate: 225deg;
+  }
+}
+div[class^="icon_arrow"][class*="left"] {
+  & .icon_item {
+    translate: 0.3rem 0;
+    rotate: 135deg;
+  }
+}
+div[class^="icon_arrow"][class*="right"] {
+  & .icon_item {
+    translate: -0.3rem 0;
+    rotate: 315deg;
+  }
+}
+
+/* Стили для иконки toggle */
+div[class^="icon_wrap"]:hover {
+  & div[class^="icon_toggle"] {
+    & .icon_item {
+      background-color: var(--accent-color);
+      &::after {
+        translate: calc(var(--toogle-w) - var(--toogle-h)) 0;
+      }
+    }
+  }
+}
+div[class^="icon_toggle"] {
+  --toogle-w: 4rem;
+  --toogle-h: 2.2rem;
+  & .icon_item {
+    margin: auto;
+    padding: 0.3rem;
+    width: var(--toogle-w);
+    height: var(--toogle-h);
+    position: relative;
+    align-content: center;
+    border-radius: 100vmax;
+    background-color: var(--color-border);
+    transition: background-color var(--main-animation-speed)
+      var(--main-animation-function);
+    &::after {
+      content: "";
+      height: 100%;
+      aspect-ratio: 1;
+      display: block;
+      border-radius: 100vmax;
+      background-color: var(--color-cover-item);
+      transition: translate var(--main-animation-speed)
+        var(--main-animation-function);
+      will-change: translate;
+    }
+  }
+}
+
+/* Стили для иконки calendar */
+div[class^="icon_calendar"] {
+  & .icon_item {
+    margin: auto;
+    width: 2rem;
+    height: 2rem;
+    position: absolute;
+    inset: 0;
+    border: var(--icon-shape) solid var(--color-font-primary);
+    &::before,
+    &::after {
+      margin: auto;
+      position: absolute;
+      inset: 0;
+      border: var(--icon-shape) solid var(--color-font-primary);
+    }
+    &::before {
+      content: "";
+      width: 1.2rem;
+      height: 0.6rem;
+      inset: 0 0 auto;
+      translate: 0 -70%;
+      border-top: 0;
+      border-bottom: 0;
+    }
+    &::after {
+      content: attr(data-attr-event);
+      padding: 0 0.1rem;
+      width: 100%;
+      height: 1.3rem;
+      inset: auto 0 0;
+      border-right: 0;
+      border-left: 0;
+      border-bottom: 0;
+      font-size: 0.8rem;
+      line-height: 1.3;
+      text-align: center;
+      vertical-align: middle;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 1px;
+    }
+  }
+}
+
+/* Стили для иконки закрыть */
+div[class^="icon_close"] {
+  --icon-shape: 0.22rem;
+  & .icon_item {
+    margin: auto;
+    position: absolute;
+    inset: 0;
+    transition: background-color 0s var(--main-animation-speed);
+    &::before,
+    &::after {
+      content: "";
+      margin: auto;
+      width: 2.6rem;
+      height: var(--icon-shape);
+      position: absolute;
+      inset: 0;
+      border-radius: 100vmax;
+      background-color: var(--color-font-primary);
+    }
+    &::before {
+      rotate: 45deg;
+    }
+    &::after {
+      rotate: 135deg;
+    }
+  }
+}
+
+/* Стили для иконки check */
+div[class^="icon_check"] {
+  --icon-shape: 0.22rem;
+  & .icon_item {
+    margin: auto;
+    width: 2.4rem;
+    height: 2.4rem;
+    position: relative;
+    translate: -0.3rem -0.7rem;
+    rotate: 45deg;
+    &::before,
+    &::after {
+      content: "";
+      margin: auto;
+      position: absolute;
+      inset: auto 0 0 auto;
+      border-radius: 100vmax;
+      background-color: var(--color-font-primary);
+    }
+    &::before {
+      width: 62.5%;
+      height: var(--icon-shape);
+      transform-origin: right center;
+    }
+    &::after {
+      width: var(--icon-shape);
+      height: 100%;
+      transform-origin: center top;
+    }
+  }
+}
+
+/* Стили для иконки check animate */
+div[class^="icon_wrap"]:hover {
+  & div[class^="icon_check"][class*="animate"] {
+    & .icon_item {
+      &::before,
+      &::after {
+        scale: 1;
+      }
+      &::before {
+        transform-origin: left center;
+      }
+      &::after {
+        transform-origin: center bottom;
+      }
+    }
+  }
+}
+div[class^="icon_check"][class*="animate"] {
+  & .icon_item {
+    &::before,
+    &::after {
+      transition: scale var(--main-animation-speed)
+        var(--main-animation-function);
+      will-change: scale;
+    }
+    &::before {
+      scale: 0 1;
+    }
+    &::after {
+      scale: 1 0;
+      transition-delay: var(--main-animation-speed);
+    }
+  }
+}
+/* Стили для иконки create */
+div[class^="icon_wrap"][class*="animate"]:hover {
+  & div[class^="icon_create"] {
+    & .icon_item {
+      rotate: 90deg;
+    }
+  }
+}
+div[class^="icon_create"] {
+  & .icon_item {
+    margin: auto;
+    width: 2.6rem;
+    aspect-ratio: 1;
+    position: relative;
+    transition: rotate var(--main-animation-speed)
+      var(--main-animation-function);
+    will-change: rotate;
+    &::before,
+    &::after {
+      content: "";
+      margin: auto;
+      position: absolute;
+      inset: 0;
+      border-radius: 100vmax;
+      background-color: var(--color-font-primary);
+    }
+    &::before {
+      width: 100%;
+      height: var(--icon-shape);
+    }
+    &::after {
+      width: var(--icon-shape);
+      height: 100%;
+    }
+  }
+}
+
+/* Стили для иконки уведомления */
+div[class^="icon_wrap"]:hover > div[class^="icon_notification"] {
+  &::after {
+    transform-origin: right center;
+    translate: calc((var(--icon-shape) * 3) * -1) -1.4rem;
+    scale: 1 1;
+  }
+}
+div[class^="icon_notification"] {
+  &::before,
+  &::after {
+    content: "";
+    margin: auto;
+    border-radius: 100vmax;
+    background-color: var(--color-font-primary);
+  }
+  &::before {
+    width: 2.2rem;
+    height: var(--icon-shape);
+    display: block;
+    position: relative;
+    inset: 1.7rem 0 auto;
+    border-radius: 100vmax;
+  }
+  &::after {
+    width: 4rem;
+    height: var(--icon-shape);
+    position: absolute;
+    inset: 0;
+    box-shadow: 0 calc(var(--icon-shape) * -1) 0 var(--color-cover-item);
+    transform-origin: left center;
+    rotate: 315deg;
+    scale: 0 1;
+    translate: calc(var(--icon-shape) * 3) 1.4rem;
+    transition: scale 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    will-change: scale;
+  }
+  & .icon_item {
+    margin: auto;
+    width: 1.8rem;
+    height: 1.8rem;
+    position: relative;
+    inset: auto auto 0.3rem;
+    border: var(--icon-shape) solid var(--color-font-primary);
+    border-bottom: 0;
+    border-radius: 100vmax 100vmax 0 0;
+    &::before,
+    &::after {
+      content: "";
+      margin: auto;
+      position: absolute;
+    }
+    &::before {
+      width: 0.8rem;
+      height: 0.8rem;
+      inset: 1.5rem 0 auto;
+      border: var(--icon-shape) solid var(--color-font-primary);
+      border-top-color: transparent;
+      border-left-color: transparent;
+      border-radius: 100vmax;
+      rotate: 45deg;
+    }
+    &::after {
+      width: 0.4rem;
+      height: 0.4rem;
+      inset: calc((var(--icon-shape) * 2) * -1) 0 auto;
+      border-radius: 100vmax 100vmax 0 0;
+      background-color: var(--color-font-primary);
+    }
+  }
+}
+
+/* Стили для иконки edit */
+div[class^="icon_wrap"]:hover > div[class^="icon_edit"] {
+  & .icon_item {
+    translate: 0.9rem 0;
+  }
+}
+div[class^="icon_edit"] {
+  &::before {
+    content: "";
+    margin: auto;
+    width: 2.4rem;
+    height: var(--icon-shape);
+    display: block;
+    position: absolute;
+    inset: 0;
+    border-radius: 100vmax;
+    translate: 0 1.1rem;
+    background-color: var(--color-font-primary);
+  }
+  & .icon_item {
+    margin: auto;
+    width: 0.6rem;
+    height: 2.8rem;
+    position: relative;
+    rotate: 35deg;
+    transition: translate 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    will-change: translate;
+    &::before,
+    &::after {
+      content: "";
+      margin: auto;
+      position: absolute;
+      border-bottom: 0;
+    }
+    &::before {
+      width: 100%;
+      height: 2.2rem;
+      inset: 0 0 auto;
+      border-top: calc(var(--icon-shape) * 4) solid var(--color-font-primary);
+      border-right: var(--icon-shape) solid var(--color-font-primary);
+      border-left: var(--icon-shape) solid var(--color-font-primary);
+      border-radius: 0.2rem 0.2rem 0 0;
+    }
+    &::after {
+      width: 0.6rem;
+      height: 0.6rem;
+      inset: auto 0 0;
+      border-left: 0.3rem solid transparent;
+      border-right: 0.3rem solid transparent;
+      border-top: 0.4rem solid var(--color-font-primary);
+      border-radius: 0 0 100vmax 100vmax;
+    }
+  }
+}
+
+/* Стили для иконки remove */
+div[class^="icon_wrap"]:hover > div[class^="icon_remove"] {
+  & .icon_item {
+    translate: 0 -1.1rem;
+  }
+}
+div[class^="icon_remove"] {
+  &::before,
+  &::after {
+    content: "";
+    margin: auto;
+    position: absolute;
+    inset: 0;
+  }
+  &::before {
+    width: 1.8rem;
+    height: 2.2rem;
+    border: var(--icon-shape) solid var(--color-font-primary);
+    border-top: 0;
+    border-radius: 0 0 0.3rem 0.3rem;
+    translate: 0 0.3rem;
+  }
+  &::after {
+    width: 0.8rem;
+    height: 1.5rem;
+    position: absolute;
+    border-right: var(--icon-shape) solid var(--color-font-primary);
+    border-left: var(--icon-shape) solid var(--color-font-primary);
+    translate: 0 0.2rem;
+  }
+  & .icon_item {
+    margin: auto;
+    width: 2.2rem;
+    height: var(--icon-shape);
+    position: absolute;
+    inset: 0;
+    border-radius: 100vmax;
+    background-color: var(--color-font-primary);
+    translate: 0 -0.9rem;
+    transition: translate 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    will-change: translate;
+    &::before {
+      content: "";
+      margin: auto;
+      position: absolute;
+      width: 1rem;
+      height: 0.3rem;
+      inset: auto 0 0.2rem;
+      border: var(--icon-shape) solid var(--color-font-primary);
+      border-bottom: transparent;
+      border-radius: 100vmax 100vmax 0 0;
+    }
+  }
+}
