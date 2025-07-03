@@ -110,8 +110,8 @@ div[class^="icon_check"] {
 div[class^="icon_menu"][class*="dots"] {
   & .icon_item {
     margin: auto;
-    width: calc(var(--icon-shape) * 2);
-    height: calc(var(--icon-shape) * 2);
+    width: calc(var(--icon-shape) * 2.5);
+    height: calc(var(--icon-shape) * 2.5);
     border-radius: 100%;
     position: relative;
     background-color: var(--color-font-primary);

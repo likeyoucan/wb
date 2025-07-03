@@ -403,6 +403,10 @@ p {
       }
     }
   }
+  & .section_notes {
+    margin-inline: var(--margin-w-m);
+    width: calc(100% - (var(--margin-w-m) * 2));
+  }
 }
 /* Основная секция */
 .section_label {
@@ -544,79 +548,90 @@ p {
 }
 /* Секция заметок */
 .section_notes {
-  padding: var(--padding-h-m) var(--padding-w-m);
+  margin-bottom: var(--margin-h-m);
+
   width: 100%;
-  min-height: var(--item-h);
-  max-height: fit-content;
+  min-height: var(--item-h-m);
+  max-height: var(--item-h-m);
   position: relative;
   overflow: hidden;
+  border-radius: 1rem;
+  background-color: var(--color-notes);
   border: var(--outline);
+  color: var(--color-font-primary);
   interpolate-size: allow-keywords;
   transition: max-height var(--main-animation-speed)
     var(--main-animation-function);
   will-change: max-height;
   /* Состояние редактирования заметок */
-  &.edit {
+  &.open {
     max-height: fit-content;
-  }
-  .notes_wrap {
-    padding-bottom: var(--padding-h-m);
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    row-gap: var(--margin-h-m);
-    border-radius: max(0.4rem, min(1.6rem, 10%));
-    border: var(--outline);
-    background-color: var(--color-notes);
-    color: var(--color-font-primary);
-    /* Если есть кнопки управления */
-    &:has(.controls_btn_wrap) {
-      padding-bottom: 0;
-      & .notes_content_wrap {
-        max-height: calc(
-          100dvh -
-            (
-              (var(--padding-h-m) * 2) + (var(--item-h) * 3) +
-                (var(--item-h-m) * 2) + 3px
-            )
-        );
+    & div[class^="icon_wrap"] {
+      & div[class^="icon_arrow"][class*="bottom"][class*="rotate"] {
+        rotate: x 180deg;
       }
     }
   }
-  /* Заголовок заметок */
-  .notes_caption_wrap {
+  &:has(.notes_content_wrap.edit) {
+    & .controls_btn_wrap {
+      height: var(--item-h-s);
+    }
+  }
+  &:not(:has(.notes_content_wrap.edit)) {
+    .notes_content {
+      padding-bottom: var(--padding-h-m);
+    }
+  }
+  & .controls_btn_wrap {
+    height: 0;
+    transition: height var(--main-animation-speed)
+      var(--main-animation-function);
+    will-change: height;
+  }
+  /* Переключатель отображения заметок */
+  .notes_switch {
     width: 100%;
     height: var(--item-h-m);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: var(--outline);
-    & .notes_caption {
+    cursor: pointer;
+    /* Заголовок заметок */
+    .notes_caption_wrap {
       padding-inline: var(--padding-w-m);
-      font-size: var(--h-font-m);
-      line-height: var(--h-line-height-m);
+      width: 100%;
+      height: 100%;
+      align-content: center;
       border: var(--outline);
+      & .notes_caption {
+        font-size: var(--h-font-m);
+        line-height: var(--h-line-height-m);
+        border: var(--outline);
+      }
     }
   }
-}
-/* Контент заметок */
-.notes_content_wrap {
-  padding-inline: var(--padding-w-m);
-  width: 100%;
-  min-height: 0;
-  max-height: calc(
-    100dvh -
-      ((var(--padding-h-m) * 2) + (var(--item-h) * 3) + var(--item-h-m) + 3px)
-  );
-  overflow-x: hidden;
-  overflow-y: auto;
-  border: var(--outline);
-  & .notes_content {
-    font-size: var(--p-font);
-    line-height: var(--p-line-height);
+  /* Контент заметок */
+  .notes_content_wrap {
+    padding: var(--padding-h-m) var(--padding-w-m);
+    width: 100%;
+    min-height: 0;
+    max-height: calc(
+      100dvh -
+        ((var(--padding-h-m) * 2) + (var(--item-h) * 3) + var(--item-h-m) + 3px)
+    );
+    border: var(--outline);
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE и Edge */
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    & .notes_content {
+      align-content: center;
+      font-size: var(--p-font);
+      line-height: var(--p-line-height);
+    }
   }
 }
 
@@ -688,13 +703,12 @@ p {
       inset: auto calc(((100dvw / 2) - (var(--content-wrap) / 2))) 0 auto;
       scale: 1;
       transition-duration: 0.1s, 0.5s, 0.5s, 0.3s, 0.5s;
-      transition-timing-function: ease-in, cubic-bezier(0.2, 0, 0.2, 1),
-        cubic-bezier(0.2, 0, 0.2, 1), cubic-bezier(0.2, 0, 0.2, 1),
-        cubic-bezier(0.2, 0, 0.2, 1);
+      transition-timing-function: ease-in, var(--animation-size),
+        var(--animation-size), var(--animation-size), var(--animation-size);
       transition-delay: 0s, 0.15s, 0.15s, 0.3s, 0.15s;
       & > :where(.form_header, .form_body, .controls_btn_wrap) {
         opacity: 1;
-        transition: opacity 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+        transition: opacity 0.3s var(--animation-size);
         transition-delay: 0.3s;
       }
     }
@@ -719,9 +733,8 @@ p {
   transform-origin: center center;
   transition-property: scale, width, height, border-radius, inset;
   transition-duration: 0.1s, 0.3s, 0.3s, 0.3s, 0.3s;
-  transition-timing-function: ease-out, cubic-bezier(0.2, 0, 0.2, 1),
-    cubic-bezier(0.2, 0, 0.2, 1), cubic-bezier(0.2, 0, 0.2, 1),
-    cubic-bezier(0.2, 0, 0.2, 1);
+  transition-timing-function: ease-out, var(--animation-size),
+    var(--animation-size), var(--animation-size), var(--animation-size);
   transition-delay: 0.3s, 0s, 0s, 0s, 0s;
   transform: translateZ(0);
   will-change: scale, width, height, border-radius, inset;
@@ -731,7 +744,7 @@ p {
   }
   & > :where(.form_header, .form_body, .controls_btn_wrap) {
     opacity: 0;
-    transition: opacity 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+    transition: opacity 0.3s var(--animation-size);
     will-change: opacity;
   }
   & .form_header {
@@ -938,6 +951,11 @@ p {
           display: none;
         }
       }
+      &:not(.disabled) {
+        & .option_wrap:has(div[class^="icon_arrow"]) {
+          left: var(--margin-w-m);
+        }
+      }
       &:has(div[class^="icon_arrow"]) {
         cursor: pointer;
         &:hover {
@@ -986,6 +1004,7 @@ p {
         justify-content: space-between;
         align-items: center;
         flex-shrink: 0;
+        position: relative;
         border: var(--outline);
         & .option {
           font-size: var(--p-font);

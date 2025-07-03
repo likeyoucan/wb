@@ -75,7 +75,7 @@
                         </div>
                       </div>
                       <div class="icon_wrap__size_m__scale menu_modal_btn_open">
-                        <div class="icon_menu__dots__horizontal">
+                        <div class="icon_menu__dots__vertical">
                           <div class="icon_item"></div>
                         </div>
                       </div>
@@ -90,36 +90,34 @@
                   </div>
                 </section>
                 <section class="section_notes">
-                  <div class="notes_wrap">
-                    <label class="notes_caption_wrap">
-                      <input
-                        type="checkbox"
-                        name=""
-                        id="note_switch"
-                        class="hidden"
-                      />
+                  <div class="notes_switch">
+                    <div class="notes_caption_wrap">
                       <h5 class="notes_caption">заметки</h5>
-                      <button
-                        class="icon_wrap__size_m"
-                        aria-label="Переключить заметки"
-                      ></button>
-                    </label>
-                    <div class="notes_content_wrap">
-                      <div class="notes_content">modularscale.com</div>
                     </div>
-                    <div class="controls_btn_wrap">
-                      <div class="btn_cancel" aria-label="Отменить">
-                        <div class="icon_wrap__size_s__scale">
-                          <div class="icon_close">
-                            <div class="icon_item"></div>
-                          </div>
+                    <div
+                      class="icon_wrap__size_m__scale"
+                      aria-label="Переключить заметки"
+                    >
+                      <div class="icon_arrow__bottom__rotate">
+                        <div class="icon_item"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="notes_content_wrap">
+                    <div class="notes_content">modularscale.com</div>
+                  </div>
+                  <div class="controls_btn_wrap">
+                    <div class="btn_cancel" aria-label="Отменить">
+                      <div class="icon_wrap__size_s__scale">
+                        <div class="icon_close">
+                          <div class="icon_item"></div>
                         </div>
                       </div>
-                      <div class="btn_save" aria-label="Сохранить">
-                        <div class="icon_wrap__size_s__scale">
-                          <div class="icon_check">
-                            <div class="icon_item"></div>
-                          </div>
+                    </div>
+                    <div class="btn_save" aria-label="Сохранить">
+                      <div class="icon_wrap__size_s__scale">
+                        <div class="icon_check">
+                          <div class="icon_item"></div>
                         </div>
                       </div>
                     </div>
@@ -152,56 +150,6 @@
                       class="list_item_caption_form"
                       placeholder="Введите название задачи"
                     />
-                  </div>
-                  <div class="option_item_wrap">
-                    <div class="option_caption_wrap">
-                      <h5 class="option_caption">добавить заметки</h5>
-                    </div>
-                    <div class="option_wrap">
-                      <div class="icon_wrap__inv_color__size_s__scale__animate">
-                        <div class="icon_create">
-                          <div class="icon_item"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-                <section class="section_options">
-                  <div class="select_wrap">
-                    <div class="select">
-                      <div class="select_option_wrap item_select">
-                        <div class="option_cover">
-                          <h6 class="option_caption">категория</h6>
-                          <h5 class="option_name">без категории</h5>
-                        </div>
-                        <div class="icon_wrap__size_m">
-                          <div class="icon_arrow__bottom__rotate">
-                            <div class="icon_item"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="select_option_wrap color_light_blue">
-                        <h5 class="option_name">спорт</h5>
-                      </div>
-                      <div class="select_option_wrap color_green">
-                        <h5 class="option_name">арт</h5>
-                      </div>
-                      <div class="select_option_wrap color_peach">
-                        <h5 class="option_name">кодинг</h5>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="option_item_wrap">
-                    <div class="option_caption_wrap">
-                      <h5 class="option_caption">добавить категорию</h5>
-                    </div>
-                    <div class="option_wrap">
-                      <div class="icon_wrap__inv_color__size_s__scale__animate">
-                        <div class="icon_create">
-                          <div class="icon_item"></div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </section>
                 <div class="section_caption_wrap">
@@ -314,19 +262,103 @@
                     </div>
                   </div>
                 </section>
+                <section class="section_options">
+                  <div class="select_wrap">
+                    <div class="select">
+                      <div class="select_option_wrap item_select">
+                        <div class="option_cover">
+                          <h6 class="option_caption">категория</h6>
+                          <h5 class="option_name">без категории</h5>
+                        </div>
+                        <div class="icon_wrap__size_m__scale">
+                          <div class="icon_arrow__bottom__rotate">
+                            <div class="icon_item"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="select_option_wrap color_light_blue">
+                        <h5 class="option_name">спорт</h5>
+                      </div>
+                      <div class="select_option_wrap color_green">
+                        <h5 class="option_name">арт</h5>
+                      </div>
+                      <div class="select_option_wrap color_peach">
+                        <h5 class="option_name">кодинг</h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="option_item_wrap">
+                    <div class="option_caption_wrap">
+                      <h5 class="option_caption">добавить категорию</h5>
+                    </div>
+                    <div class="option_wrap">
+                      <div class="icon_wrap__inv_color__size_s__scale__animate">
+                        <div class="icon_create">
+                          <div class="icon_item"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="option_item_wrap">
+                    <div class="option_caption_wrap">
+                      <h5 class="option_caption">добавить заметки</h5>
+                    </div>
+                    <div class="option_wrap">
+                      <div class="icon_wrap__inv_color__size_s__scale__animate">
+                        <div class="icon_create">
+                          <div class="icon_item"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <section class="section_notes">
+                  <div class="notes_switch">
+                    <div class="notes_caption_wrap">
+                      <h5 class="notes_caption">заметки</h5>
+                    </div>
+                    <div
+                      class="icon_wrap__size_m__scale"
+                      aria-label="Переключить заметки"
+                    >
+                      <div class="icon_arrow__bottom__rotate">
+                        <div class="icon_item"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="notes_content_wrap">
+                    <div class="notes_content">modularscale.com</div>
+                  </div>
+                  <div class="controls_btn_wrap">
+                    <div class="btn_cancel" aria-label="Отменить">
+                      <div class="icon_wrap__size_s__scale">
+                        <div class="icon_close">
+                          <div class="icon_item"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="btn_save" aria-label="Сохранить">
+                      <div class="icon_wrap__size_s__scale">
+                        <div class="icon_check">
+                          <div class="icon_item"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
               </div>
             </div>
             <div class="controls_btn_wrap">
-              <div class="btn_cancel close_form" aria-label="Отменить">
-                <div class="form_btn">отменить</div>
+              <div class="btn_cancel close_form" aria-label="Отмена">
+                <div class="form_btn">отмена</div>
               </div>
-              <div class="btn_save close_form" aria-label="Сохранить">
-                <div class="form_btn">сохранить</div>
+              <div class="btn_save close_form" aria-label="Добавить">
+                <div class="form_btn">добавить</div>
               </div>
             </div>
           </div>
         </div>
-        <div class="modal_wrap modal_open">
+        <div class="modal_wrap">
           <div class="modal_content_wrap">
             <div class="modal_header">
               <div class="modal_caption_wrap">
@@ -345,7 +377,7 @@
                           <h6 class="option_caption">категория</h6>
                           <h5 class="option_name">спорт</h5>
                         </div>
-                        <div class="icon_wrap__size_m">
+                        <div class="icon_wrap__size_m__scale">
                           <div class="icon_arrow__bottom__rotate">
                             <div class="icon_item"></div>
                           </div>

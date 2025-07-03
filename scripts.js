@@ -234,6 +234,19 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // ===== Notes =====
+
+  // Находим все элементы .notes_switch
+  document.addEventListener("click", (e) => {
+    // Проверяем, был ли клик по элементу .notes_switch или его потомку
+    const switchElement = e.target.closest(".notes_switch");
+    if (switchElement) {
+      // Переключаем класс edit у ближайшего родителя .section_notes
+      const sectionNotes = switchElement.closest(".section_notes");
+      sectionNotes?.classList.toggle("open");
+    }
+  });
+
   // ===== Проверка поддержки CSS =====
   function checkCSSSupport(property, testValue = "", withPrefixes = true) {
     const el = document.createElement("div").style;
