@@ -248,6 +248,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // ===== Вертикальный счетчик =====
+  
   const INTERVAL_CONFIG = {
     hours: { min: 0, max: 23 },
     minutes: { min: 0, max: 59 },

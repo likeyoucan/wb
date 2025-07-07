@@ -586,6 +586,7 @@ p {
     }
   }
   & .controls_btn_wrap {
+    padding: 0 var(--margin-w-s) var(--margin-h-s);
     height: 0;
     transition: height var(--main-animation-speed)
       var(--main-animation-function);
@@ -681,10 +682,10 @@ p {
   }
 }
 .form_btn {
-  padding: 1.2rem 2rem;
+  padding: 1.5rem 3rem;
   width: fit-content;
   border-radius: 100vmax;
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   line-height: 1;
   background-color: var(--color-gray);
   color: var(--accent-color-font);
@@ -777,6 +778,10 @@ p {
     &::-webkit-scrollbar {
       display: none;
     }
+  }
+  & .controls_btn_wrap:has(.form_btn) {
+    margin-bottom: var(--margin-h-m);
+    height: var(--item-h-m);
   }
 }
 .list_item_caption_form {
@@ -1231,68 +1236,65 @@ p {
 /* Стили для формы интервала */
 
 .section_interval_wrap {
-  .interval_form_wrap {
-    margin: auto;
-    padding: var(--padding-h-m) var(--padding-w-m);
-    width: 100%;
+  margin: auto;
+  padding: var(--padding-h-m) var(--padding-w-m);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: var(--margin-w-m);
+  .interval_form {
+    width: var(--item-w-m);
+    height: 13rem;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    column-gap: var(--margin-w);
-    .interval_form {
-      width: var(--item-w-m);
-      height: 130px;
-      display: flex;
-      position: relative;
-      overflow: hidden;
+    position: relative;
+    overflow: hidden;
+    touch-action: pan-y;
+    cursor: pointer;
+    .interval {
+      margin-block: auto;
+      width: 100%;
+      height: var(--item-h-s);
+      position: absolute;
+      inset: 0 auto;
+      align-content: center;
+      font-size: var(--h-font-xxl);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: var(--margin-w-s);
+      line-height: 1;
+      text-align: center;
+      color: var(--color-font-primary);
+      transition: translate var(--duration, 350ms)
+          cubic-bezier(0.25, 0.8, 0.5, 1),
+        scale var(--duration, 350ms) cubic-bezier(0.25, 0.8, 0.5, 1),
+        opacity calc(var(--duration, 350ms) * 0.7) ease-out;
+      transition-behavior: allow-discrete;
+      transform-style: preserve-3d;
       touch-action: none;
       user-select: none;
       -webkit-user-drag: none;
-      .interval {
-        margin-block: auto;
-        width: 100%;
-        height: var(--item-h-s);
-        position: absolute;
-        inset: 0 auto;
-        align-content: center;
-        font-size: var(--h-font-xxl);
-        font-variant-numeric: tabular-nums;
-        letter-spacing: var(--margin-w-s);
-        line-height: 1;
-        text-align: center;
-        color: var(--color-font-primary);
-        transition: translate var(--duration, 350ms)
-            cubic-bezier(0.25, 0.8, 0.5, 1),
-          scale var(--duration, 350ms) cubic-bezier(0.25, 0.8, 0.5, 1),
-          opacity calc(var(--duration, 350ms) * 0.7) ease-out;
-        transition-behavior: allow-discrete;
-        transform-style: preserve-3d;
-        touch-action: pan-y;
-        backface-visibility: hidden;
-        will-change: translate, scale, opacity;
-        opacity: 1;
-        cursor: pointer;
-        user-select: none;
-        &.is_prev_hidden {
-          translate: 0 -76px;
-        }
-        &.is_prev {
-          translate: 0 -43px;
-        }
-        &.is_next {
-          translate: 0 43px;
-        }
-        &.is_next_hidden {
-          translate: 0 76px;
-        }
-        &:where(.is_prev, .is_next) {
-          opacity: 1;
-          scale: 0.6;
-        }
-        &:where(.is_prev_hidden, .is_next_hidden) {
-          opacity: 0;
-          scale: 0.3;
-        }
+      backface-visibility: hidden;
+      will-change: translate, scale, opacity;
+      opacity: 1;
+      user-select: none;
+      &.is_prev_hidden {
+        translate: 0 -167%;
+      }
+      &.is_prev {
+        translate: 0 -100%;
+      }
+      &.is_next {
+        translate: 0 100%;
+      }
+      &.is_next_hidden {
+        translate: 0 167%;
+      }
+      &:where(.is_prev, .is_next) {
+        scale: 0.6;
+      }
+      &:where(.is_prev_hidden, .is_next_hidden) {
+        opacity: 0;
+        scale: 0.3;
       }
     }
   }
