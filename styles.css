@@ -36,8 +36,8 @@
   --p-font: 1.4rem;
   --p-line-height: 1.5;
   /* размеры XL */
-  --margin-w-xl: 2rem;
-  --margin-h-xl: 2rem;
+  --margin-w-xl: 3rem;
+  --margin-h-xl: 3rem;
   --padding-w-xl: 4rem;
   --padding-h-xl: 4rem;
   --item-w-xl: 10rem;
@@ -73,7 +73,7 @@
   --icon-size: 6rem;
   --icon-size-xl: 8rem;
   /*  Colors */
-  --main-background-c: var(--color-cover-item);
+  --main-background-c: var(--color-cover-hover);
   --main-font-c: lch(
     from var(--main-background-c) calc((49.44 - l) * infinity) 0 0
   );
@@ -593,15 +593,16 @@ p {
   }
   /* Переключатель отображения заметок */
   .notes_switch {
+    padding-inline: var(--padding-w-m);
     width: 100%;
     height: var(--item-h-m);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    column-gap: var(--paddin-w-m);
     cursor: pointer;
     /* Заголовок заметок */
     .notes_caption_wrap {
-      padding-inline: var(--padding-w-m);
       width: 100%;
       height: 100%;
       align-content: center;
@@ -650,15 +651,11 @@ p {
 .controls_btn_wrap {
   margin: 0 auto;
   width: 100%;
-  height: var(--item-h-m);
+  height: var(--item-h-s);
   display: flex;
   justify-content: space-between;
   align-items: center;
   border: var(--outline);
-  &:has(.form_btn) {
-    padding: var(--padding-h-m) var(--padding-w-m);
-    height: var(--item-h);
-  }
   .btn_cancel,
   .btn_save {
     height: 100%;
@@ -725,6 +722,7 @@ p {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  row-gap: var(--margin-h-m);
   position: fixed;
   inset: auto
     calc(((100dvw / 2) - (var(--content-wrap) / 2)) + var(--margin-w-m))
@@ -752,9 +750,9 @@ p {
   }
   & .form_header {
     & .form_caption_wrap {
-      padding-inline: var(--padding-w-m);
+      padding: var(--padding-h-m) var(--padding-w-m);
       width: 100%;
-      height: var(--item-h-m);
+      height: var(--item-h-s);
       align-content: center;
       text-align: center;
       & .form_caption {
@@ -765,7 +763,7 @@ p {
   }
   & .form_body {
     width: 100%;
-    max-height: calc(100% - (var(--item-h-m) + var(--item-h)));
+    max-height: 100%;
     display: flex;
     flex-direction: column;
     row-gap: var(--margin-h-s);
@@ -788,7 +786,7 @@ p {
   border-radius: var(--radius-m);
   font-size: var(--h-font-m);
   line-height: var(--h-line-height-m);
-  background-color: var(--color-cover-item);
+  background-color: inherit;
 }
 .list_form_create_btn {
   margin: auto;
@@ -905,7 +903,7 @@ p {
 }
 /* заголовок раздела опции */
 .section_caption_wrap {
-  margin: auto;
+  margin: 0 auto calc((var(--margin-h-xl) * -1) - 1px);
   padding: var(--padding-h-m) var(--padding-w-m);
   width: 100%;
   & .section_caption {
@@ -916,27 +914,40 @@ p {
 
 /* контейнер раздела опции */
 .options_wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: calc(var(--margin-h-xl) + 1px);
   /* опции секции */
   .section_options {
+    padding: var(--padding-h-s) 0;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    row-gap: var(--margin-h-m);
-    &:not(:last-of-type) {
+    row-gap: var(--margin-h-s);
+    position: relative;
+    border-radius: var(--radius-m);
+    background-color: var(--color-cover-hover);
+    &:not(:last-child) {
       &:after {
         content: "";
-        margin: var(--margin-h-m) var(--margin-w-m) var(--margin-h);
+        margin: auto;
         width: calc(100% - (var(--margin-w-m) * 2));
         height: 1px;
-        display: inline-block;
+        position: absolute;
+        inset: auto 0 0;
+        translate: 0 calc(1px + (var(--margin-h-xl) / 2));
         background-color: var(--color-border);
       }
+    }
+    &:has(.list_item_caption_form) {
+      padding-block: 0;
     }
     /* контейнер опции */
     .option_item_wrap {
       width: 100%;
-      min-height: var(--item-h-s);
+      min-height: var(--item-h-m);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -1214,5 +1225,75 @@ p {
   cursor: pointer;
   &:hover {
     background-color: var(--color-cover-hover);
+  }
+}
+
+/* Стили для формы интервала */
+
+.section_interval_wrap {
+  .interval_form_wrap {
+    margin: auto;
+    padding: var(--padding-h-m) var(--padding-w-m);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: var(--margin-w);
+    .interval_form {
+      width: var(--item-w-m);
+      height: 130px;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      .interval {
+        margin-block: auto;
+        width: 100%;
+        height: var(--item-h-s);
+        position: absolute;
+        inset: 0 auto;
+        align-content: center;
+        font-size: var(--h-font-xxl);
+        font-variant-numeric: tabular-nums;
+        letter-spacing: var(--margin-w-s);
+        line-height: 1;
+        text-align: center;
+        color: var(--color-font-primary);
+        transition: translate var(--duration, 350ms)
+            cubic-bezier(0.25, 0.8, 0.5, 1),
+          scale var(--duration, 350ms) cubic-bezier(0.25, 0.8, 0.5, 1),
+          opacity calc(var(--duration, 350ms) * 0.7) ease-out;
+        transition-behavior: allow-discrete;
+        transform-style: preserve-3d;
+        touch-action: pan-y;
+        backface-visibility: hidden;
+        will-change: translate, scale, opacity;
+        opacity: 1;
+        cursor: pointer;
+        user-select: none;
+        &.is_prev_hidden {
+          translate: 0 -76px;
+        }
+        &.is_prev {
+          translate: 0 -43px;
+        }
+        &.is_next {
+          translate: 0 43px;
+        }
+        &.is_next_hidden {
+          translate: 0 76px;
+        }
+        &:where(.is_prev, .is_next) {
+          opacity: 1;
+          scale: 0.6;
+        }
+        &:where(.is_prev_hidden, .is_next_hidden) {
+          opacity: 0;
+          scale: 0.3;
+        }
+      }
+    }
   }
 }
