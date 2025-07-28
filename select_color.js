@@ -1,3 +1,7 @@
+/**
+ * Custom Select Component
+ * Кастомный селект с анимациями и поддержкой touch-событий
+ */
 document.addEventListener("DOMContentLoaded", () => {
   class CustomSelect {
     constructor(selectElement) {
@@ -12,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     _init() {
       this._setupEventListeners();
-      this._handleColorClassUpdate(); // Добавляем обработчик цвета при инициализации
     }
 
     _setupEventListeners() {
@@ -33,38 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
           this.close();
         }
       });
-
-      // Слушаем собственное событие change для обновления цвета
-      this.select.addEventListener("change", (e) => {
-        if (this.select.classList.contains("select_colors")) {
-          this._handleColorClassUpdate();
-        }
-      });
-    }
-
-    // Новый метод для обработки цветовых классов
-    _handleColorClassUpdate() {
-      if (!this.select.classList.contains("select_colors")) return;
-
-      const todoListWrap = document.querySelector(".todo_list_wrap");
-      if (!todoListWrap) return;
-
-      // Находим класс color_ в текущем выбранном элементе
-      const colorClass = Array.from(this.header.classList).find((className) =>
-        className.startsWith("color_")
-      );
-
-      if (colorClass) {
-        // Удаляем все существующие color_ классы
-        Array.from(todoListWrap.classList).forEach((className) => {
-          if (className.startsWith("color_")) {
-            todoListWrap.classList.remove(className);
-          }
-        });
-
-        // Добавляем новый класс
-        todoListWrap.classList.add(colorClass);
-      }
     }
 
     _selectOption(option) {
@@ -137,11 +108,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const instance = new CustomSelect(select);
       instances.set(select, instance);
-
-      // Инициализируем цвет сразу, если это select_colors
-      if (select.classList.contains("select_colors")) {
-        instance._handleColorClassUpdate();
-      }
     });
 
     return instances;

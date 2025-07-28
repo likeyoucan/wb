@@ -307,27 +307,6 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   }
 
-  /** Проверка поддерживаемых браузером функций */
-  function checkFeaturesSupport() {
-    const features = {
-      willChange: helpers.checkCSSSupport("willChange"),
-      colorContrast:
-        CSS.supports?.("color", "color-contrast(red vs white, black)") ||
-        helpers.checkCSSSupport(
-          "color",
-          "color-contrast(red vs white, black)",
-          false
-        ),
-      clipPath: helpers.checkCSSSupport("clip-path", "path('M0 0')"),
-      hwb:
-        CSS.supports?.("color", "hwb(120 0% 0%)") ||
-        helpers.checkCSSSupport("color", "hwb(120 0% 0%)", false),
-    };
-
-    console.log("Поддержка функций:");
-    console.table(features);
-  }
-
   // ===== Инициализация приложения =====
   setupListItems();
   setupMainMenu();
@@ -335,5 +314,4 @@ document.addEventListener("DOMContentLoaded", function () {
   setupThemeSwitcher();
   setupContextMenu();
   setupNotes();
-  checkFeaturesSupport();
 });

@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
               </div>
               <section class="section_select">
                 <div class="select_wrap">
-                  <div class="select">
+                  <div class="select select_colors">
                     <div class="select_option_wrap color_light_blue item_select">
                       <div class="option_cover">
                         <h5 class="option_name">спорт</h5>
