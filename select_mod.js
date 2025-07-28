@@ -1,83 +1,121 @@
+/**
+ * Custom Select Component
+ * Кастомный селект с анимациями и поддержкой touch-событий
+ */
 document.addEventListener("DOMContentLoaded", () => {
-  const initCustomSelect = (selectClass = "select") => {
-    const selects = document.querySelectorAll(`.${selectClass}`);
-    if (!selects.length) return;
+  class CustomSelect {
+    constructor(selectElement) {
+      this.select = selectElement;
+      this.header = this.select.querySelector(".item_select");
+      this.options = Array.from(
+        this.select.querySelectorAll(".select_option_wrap:not(.item_select)")
+      );
+      this.isOpen = false;
+      this._init();
+    }
 
-    // Закрыть все открытые селекты, кроме исключения
-    const closeAllSelects = (except = null) => {
-      document
-        .querySelectorAll(`.${selectClass}.select_open`)
-        .forEach((select) => {
-          if (select !== except) select.classList.remove("select_open");
+    _init() {
+      this._setupEventListeners();
+    }
+
+    _setupEventListeners() {
+      this.header.addEventListener("click", (e) => {
+        e.stopPropagation();
+        this.toggle();
+      });
+
+      this.options.forEach((option) => {
+        option.addEventListener("click", (e) => {
+          e.stopPropagation();
+          this._selectOption(option);
         });
-    };
+      });
 
-    // Обработчик выбора опции
-    const handleOptionSelect = (select, option) => {
-      const selected = select.querySelector(".select_option_wrap.item_select");
-      if (!selected) return;
+      document.addEventListener("click", () => {
+        if (this.isOpen) {
+          this.close();
+        }
+      });
+    }
 
-      const currentOption = selected.querySelector(".option_name");
+    _selectOption(option) {
+      const currentSelected = this.select.querySelector(".item_select");
+      if (!currentSelected) return;
+
+      const currentOption = currentSelected.querySelector(".option_name");
       const selectedOption = option.querySelector(".option_name");
       if (!currentOption || !selectedOption) return;
 
       // Сохраняем текущие данные
       const prevData = {
-        classes: selected.className.replace("item_select", "").trim(),
+        classes: currentSelected.className.replace("item_select", "").trim(),
         text: currentOption.textContent,
-        caption: selected.querySelector(".option_caption")?.textContent || null,
       };
 
       // Обмен данными между элементами
-      selected.className = `${option.className
+      currentSelected.className = `${option.className
         .replace("item_select", "")
         .trim()} item_select`;
       currentOption.textContent = selectedOption.textContent;
-
-      if (prevData.caption) {
-        selected.querySelector(".option_caption").textContent =
-          prevData.caption;
-      }
-
       option.className = prevData.classes;
       selectedOption.textContent = prevData.text;
 
-      // Закрываем и эмитируем событие
-      select.classList.remove("select_open");
-      select.dispatchEvent(
-        new CustomEvent("selectChange", {
+      this.close();
+
+      // Эмитируем событие изменения
+      this.select.dispatchEvent(
+        new CustomEvent("change", {
           detail: {
             value: currentOption.textContent,
-            caption: prevData.caption,
-            selectedClass: selected.className,
+            selectedClass: currentSelected.className,
           },
         })
       );
-    };
+    }
 
-    // Инициализация селектов
-    selects.forEach((select) => {
-      const header = select.querySelector(".select_option_wrap.item_select");
-      if (!header) return;
+    toggle() {
+      this.isOpen ? this.close() : this.open();
+    }
 
-      header.addEventListener("click", (e) => {
-        e.stopPropagation();
-        closeAllSelects(select);
-        select.classList.toggle("select_open");
+    open() {
+      this.select.classList.add("select_open");
+      this.isOpen = true;
+    }
+
+    close() {
+      this.select.classList.remove("select_open");
+      this.isOpen = false;
+    }
+
+    destroy() {
+      this.header.removeEventListener("click", this._handleHeaderClick);
+      this.options.forEach((option) => {
+        option.removeEventListener("click", this._handleOptionClick);
       });
+      document.removeEventListener("click", this._handleDocumentClick);
+    }
+  }
 
-      select
-        .querySelectorAll(".select_option_wrap:not(.item_select)")
-        .forEach((option) => {
-          option.addEventListener("click", () =>
-            handleOptionSelect(select, option)
-          );
-        });
+  const initCustomSelects = () => {
+    const selects = document.querySelectorAll(".select");
+    const instances = new WeakMap();
+
+    selects.forEach((select) => {
+      // Удаляем предыдущий экземпляр, если есть
+      if (instances.has(select)) {
+        instances.get(select).destroy();
+      }
+
+      const instance = new CustomSelect(select);
+      instances.set(select, instance);
     });
 
-    // Глобальный клик для закрытия
-    document.addEventListener("click", () => closeAllSelects());
+    return instances;
   };
 
-  initCustomSelect();
+  // Инициализация при загрузке
+  initCustomSelects();
+
+  // Экспортируем функцию для повторной инициализации
+  window.initCustomSelects = initCustomSelects;
 });

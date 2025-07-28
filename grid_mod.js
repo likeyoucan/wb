@@ -98,22 +98,22 @@ document.addEventListener("DOMContentLoaded", function () {
       className: `notification ${type}`,
       textContent: message,
       style: `
-          position: fixed;
-          bottom: 20px;
-          right: 20px;
-          padding: 10px 20px;
-          background: ${
-            type === "error"
-              ? "#ff4444"
-              : type === "warning"
-              ? "#ffbb33"
-              : "#00C851"
-          };
-          color: white;
-          border-radius: 4px;
-          z-index: 10001;
-          animation: fadeIn 0.3s;
-        `,
+              position: fixed;
+              bottom: 20px;
+              right: 20px;
+              padding: 10px 20px;
+              background: ${
+                type === "error"
+                  ? "#ff4444"
+                  : type === "warning"
+                  ? "#ffbb33"
+                  : "#00C851"
+              };
+              color: white;
+              border-radius: 4px;
+              z-index: 10001;
+              animation: fadeIn 0.3s;
+            `,
     });
 
     document.body.appendChild(notification);
@@ -365,17 +365,17 @@ document.addEventListener("DOMContentLoaded", function () {
       const round = createElement("div", {
         className: "icon_grid_round",
         style: `
-            margin: auto;
-            width: ${width};
-            height: ${width};
-            border: ${borderWidth}px solid ${color};
-            border-radius: 50%;
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            box-sizing: border-box;
-            opacity: calc(${opacity} * ${state.globalOpacity});
-          `,
+                margin: auto;
+                width: ${width};
+                height: ${width};
+                border: ${borderWidth}px solid ${color};
+                border-radius: 50%;
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+                box-sizing: border-box;
+                opacity: calc(${opacity} * ${state.globalOpacity});
+              `,
       });
       wrap.appendChild(round);
     });
@@ -402,17 +402,17 @@ document.addEventListener("DOMContentLoaded", function () {
         const line = createElement("div", {
           className: "icon_grid_line",
           style: `
-                  margin: auto;
-                  position: absolute;
-                  inset: 0;
-                  width: 100%;
-                  height: ${height}px;
-                  background-color: ${color};
-                  transform: rotate(${rotate}deg);
-                  transform-origin: center;
-                  pointer-events: none;
-                  opacity: calc(${opacity} * ${state.globalOpacity});
-              `,
+                      margin: auto;
+                      position: absolute;
+                      inset: 0;
+                      width: 100%;
+                      height: ${height}px;
+                      background-color: ${color};
+                      transform: rotate(${rotate}deg);
+                      transform-origin: center;
+                      pointer-events: none;
+                      opacity: calc(${opacity} * ${state.globalOpacity});
+                  `,
         });
         wrap.appendChild(line);
       });
@@ -641,19 +641,19 @@ document.addEventListener("DOMContentLoaded", function () {
       className: "toggle-controls",
       textContent: state.controlsVisible ? "Hide Controls" : "Show Controls",
       style: `
-          position: fixed;
-          top: 10px;
-          right: 10px;
-          z-index: 10001;
-          background: #4CAF50;
-          color: white;
-          border: none;
-          padding: 8px 12px;
-          border-radius: 3px;
-          cursor: pointer;
-          font-size: 14px;
-          transition: background 0.3s;
-        `,
+              position: fixed;
+              top: 10px;
+              right: 10px;
+              z-index: 10001;
+              background: #4CAF50;
+              color: white;
+              border: none;
+              padding: 8px 12px;
+              border-radius: 3px;
+              cursor: pointer;
+              font-size: 14px;
+              transition: background 0.3s;
+            `,
     });
 
     document.body.appendChild(toggleButton);
@@ -665,199 +665,199 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const style = createElement("style", {
       textContent: `
-          :root {
-            --grid-border-color: ${state.gridColor};
-            --grid-step: ${state.gridStep}px;
-            --round-border-width: ${state.roundBorderWidth}px;
-            --line-height: ${state.lineHeight}px;
-            --global-opacity: ${state.globalOpacity};
-            --grid-opacity: ${state.gridOpacity};
-            --round-opacity: ${state.roundOpacity};
-            --line-opacity: ${state.lineOpacity};
-          }
-  
-          .icon_controls {
-            position: relative !important;
-          }
-  
-          .icon_grid_wrap {
-            position: absolute;
-            margin: auto;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            overflow: hidden;
-            opacity: var(--wrap-opacity);
-          }
-  
-          .icon_grid_wrap::after {
-            content: "";
-            margin: auto;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            inset: 0;
-            border: 0.3px solid var(--grid-border-color);
-          }
-  
-          .icon_grid {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: -0.5px;
-            left: -0.5px;
-          }
-  
-          .icon_grid_round {
-            aspect-ratio: 1 / 1;
-            position: absolute;
-            margin: auto;
-            inset: 0;
-            border: var(--round-border-width) solid var(--grid-border-color);
-            border-radius: 50%;
-            opacity: calc(var(--round-opacity) * var(--global-opacity));
-          }
-  
-          .icon_grid_line {
-            width: 100%;
-            position: absolute;
-            margin: auto;
-            inset: 0;
-            height: var(--line-height);
-            background-color: var(--grid-border-color);
-            transform-origin: center;
-            opacity: calc(var(--line-opacity) * var(--global-opacity));
-          }
-  
-          .controls {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: white;
-            padding: 30px 15px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 10000;
-            width: 300px;
-            max-height: 100dvh;
-            overflow-y: auto;
-            font-family: Arial, sans-serif;
-          }
-  
-          .controls label {
-            display: block;
-            margin: 8px 0 4px;
-            font-size: 14px;
-            color: #555;
-          }
-  
-          .controls input[type="text"], 
-          .controls input[type="number"] {
-            width: 100%;
-            padding: 6px;
-            margin-bottom: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-          }
-  
-          .controls input[type="range"] {
-            width: calc(100% - 50px);
-            vertical-align: middle;
-          }
-  
-          .controls button {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            margin: 5px 5px 5px 0;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background 0.3s;
-          }
-  
-          .controls button:hover {
-            background: #45a049;
-          }
-  
-          .control-group {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-          }
-  
-          .control-group h3 {
-            margin: 0 0 10px 0;
-            font-size: 16px;
-            color: #333;
-          }
-  
-          .button-group {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-          }
-  
-          .button-group button {
-            margin-right: 5px;
-          }
-  
-          .error-message {
-            color: #f44336;
-            font-size: 12px;
-            margin-top: 5px;
-          }
-  
-          .global-opacity-group {
-            background: #f5f5f5;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-          }
-  
-          .actions-group {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            padding-top: 10px;
-            border-top: 1px solid #eee;
-          }
-  
-          .toggle-controls {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 10001;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background 0.3s;
-          }
-  
-          .toggle-controls:hover {
-            background: #45a049;
-          }
-  
-          @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-  
-          @keyframes fadeOut {
-            from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(20px); }
-          }
-        `,
+              :root {
+                --grid-border-color: ${state.gridColor};
+                --grid-step: ${state.gridStep}px;
+                --round-border-width: ${state.roundBorderWidth}px;
+                --line-height: ${state.lineHeight}px;
+                --global-opacity: ${state.globalOpacity};
+                --grid-opacity: ${state.gridOpacity};
+                --round-opacity: ${state.roundOpacity};
+                --line-opacity: ${state.lineOpacity};
+              }
+      
+              .icon_controls {
+                position: relative !important;
+              }
+      
+              .icon_grid_wrap {
+                position: absolute;
+                margin: auto;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: 9999;
+                overflow: hidden;
+                opacity: var(--wrap-opacity);
+              }
+      
+              .icon_grid_wrap::after {
+                content: "";
+                margin: auto;
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                inset: 0;
+                border: 0.3px solid var(--grid-border-color);
+              }
+      
+              .icon_grid {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: -0.5px;
+                left: -0.5px;
+              }
+      
+              .icon_grid_round {
+                aspect-ratio: 1 / 1;
+                position: absolute;
+                margin: auto;
+                inset: 0;
+                border: var(--round-border-width) solid var(--grid-border-color);
+                border-radius: 50%;
+                opacity: calc(var(--round-opacity) * var(--global-opacity));
+              }
+      
+              .icon_grid_line {
+                width: 100%;
+                position: absolute;
+                margin: auto;
+                inset: 0;
+                height: var(--line-height);
+                background-color: var(--grid-border-color);
+                transform-origin: center;
+                opacity: calc(var(--line-opacity) * var(--global-opacity));
+              }
+      
+              .controls {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                background: white;
+                padding: 30px 15px 15px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                z-index: 10000;
+                width: 300px;
+                max-height: 100dvh;
+                overflow-y: auto;
+                font-family: Arial, sans-serif;
+              }
+      
+              .controls label {
+                display: block;
+                margin: 8px 0 4px;
+                font-size: 14px;
+                color: #555;
+              }
+      
+              .controls input[type="text"], 
+              .controls input[type="number"] {
+                width: 100%;
+                padding: 6px;
+                margin-bottom: 8px;
+                box-sizing: border-box;
+                border: 1px solid #ddd;
+                border-radius: 3px;
+              }
+      
+              .controls input[type="range"] {
+                width: calc(100% - 50px);
+                vertical-align: middle;
+              }
+      
+              .controls button {
+                background: #4CAF50;
+                color: white;
+                border: none;
+                padding: 8px 12px;
+                margin: 5px 5px 5px 0;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: background 0.3s;
+              }
+      
+              .controls button:hover {
+                background: #45a049;
+              }
+      
+              .control-group {
+                margin-bottom: 15px;
+                padding-bottom: 15px;
+                border-bottom: 1px solid #eee;
+              }
+      
+              .control-group h3 {
+                margin: 0 0 10px 0;
+                font-size: 16px;
+                color: #333;
+              }
+      
+              .button-group {
+                display: flex;
+                gap: 5px;
+                flex-wrap: wrap;
+                margin-bottom: 10px;
+              }
+      
+              .button-group button {
+                margin-right: 5px;
+              }
+      
+              .error-message {
+                color: #f44336;
+                font-size: 12px;
+                margin-top: 5px;
+              }
+      
+              .global-opacity-group {
+                background: #f5f5f5;
+                padding: 10px;
+                border-radius: 5px;
+                margin-bottom: 15px;
+              }
+      
+              .actions-group {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 15px;
+                padding-top: 10px;
+                border-top: 1px solid #eee;
+              }
+      
+              .toggle-controls {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                z-index: 10001;
+                background: #4CAF50;
+                color: white;
+                border: none;
+                padding: 8px 12px;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: background 0.3s;
+              }
+      
+              .toggle-controls:hover {
+                background: #45a049;
+              }
+      
+              @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+              }
+      
+              @keyframes fadeOut {
+                from { opacity: 1; transform: translateY(0); }
+                to { opacity: 0; transform: translateY(20px); }
+              }
+            `,
     });
     document.head.appendChild(style);
 

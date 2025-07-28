@@ -1,16 +1,117 @@
-document.addEventListener("DOMContentLoaded", function () {
-  // ===== Переключатель класса open для list_item =====
-  const listItems = document.querySelectorAll(".list_item");
-  const wrap = document.querySelector(".wrap");
+/**
+ * MAIN APPLICATION SCRIPT
+ * Основной скрипт приложения ToDo List
+ */
 
-  function closeAllItems() {
-    listItems.forEach((item) => {
-      item.classList.remove("open");
-    });
+document.addEventListener("DOMContentLoaded", function () {
+  // Проверка зависимостей
+  if (typeof IntervalScroller === "undefined") {
+    console.warn(
+      "IntervalScroller не загружен - некоторые функции могут не работать"
+    );
+  }
+  if (typeof modalSystem === "undefined") {
+    console.warn(
+      "ModalSystem не загружена - некоторые функции могут не работать"
+    );
   }
 
-  listItems.forEach((item) => {
-    item.addEventListener("click", function (e) {
+  // ===== Инициализация элементов DOM =====
+  const elements = {
+    wrap: document.querySelector(".wrap"),
+    body: document.body,
+    listItems: document.querySelectorAll(".list_item"),
+    mainMenu: {
+      button: document.getElementById("main_menu"),
+      wrap: document.querySelector(".main_menu_wrap"),
+      overlay: document.querySelector(".menu_wrap_overlay"),
+      closeBtn: document.querySelector(".main_menu_close"),
+    },
+    form: {
+      wrap: document.querySelector(".list_item_form_wrap"),
+      openBtn: document.querySelector(".list_form_create_btn"),
+      closeBtns: document.querySelectorAll(".close_form"),
+    },
+    themeToggle: document.getElementById("theme_toggle"),
+  };
+
+  // ===== Вспомогательные функции =====
+  const helpers = {
+    /** Закрывает все открытые элементы списка */
+    closeAllItems: () => {
+      document
+        .querySelectorAll(".list_item.open")
+        .forEach((item) => item.classList.remove("open"));
+    },
+
+    /** Проверяет поддержку CSS-свойства */
+    checkCSSSupport: (property, testValue = "", withPrefixes = true) => {
+      const el = document.createElement("div").style;
+      const prefixes = withPrefixes
+        ? ["", "-webkit-", "-moz-", "-ms-", "-o-"]
+        : [""];
+      return prefixes.some((prefix) => {
+        const prop = prefix + property;
+        return (
+          prop in el &&
+          (!testValue ||
+            (() => {
+              try {
+                el[prop] = testValue;
+                return el[prop] === testValue;
+              } catch {
+                return false;
+              }
+            })())
+        );
+      });
+    },
+
+    /** Временно отключает CSS-переходы */
+    disableTransitions: () => {
+      const transitionElements = Array.from(
+        document.querySelectorAll("*")
+      ).filter((el) => {
+        const styles = window.getComputedStyle(el);
+        return (
+          styles.transitionDuration !== "0s" || styles.transitionDelay !== "0s"
+        );
+      });
+
+      const originalTransitions = transitionElements.map((el) => ({
+        element: el,
+        transition: el.style.transition,
+      }));
+
+      transitionElements.forEach((el) => (el.style.transition = "none"));
+
+      setTimeout(() => {
+        originalTransitions.forEach(({ element, transition }) => {
+          element.style.transition = transition;
+        });
+      }, 50);
+    },
+
+    /** Делегирование событий */
+    delegateEvent: (event, selector, handler, context = document) => {
+      context.addEventListener(event, function (e) {
+        let target = e.target;
+        while (target && target !== context) {
+          if (target.matches(selector)) {
+            handler.call(target, e);
+            break;
+          }
+          target = target.parentNode;
+        }
+      });
+    },
+  };
+
+  // ===== Основные модули приложения =====
+
+  /** Настройка элементов списка задач */
+  function setupListItems() {
+    helpers.delegateEvent("click", ".list_item", function (e) {
       const isCaptionClick = e.target.closest(".item_caption_wrap");
       const isOpen = this.classList.contains("open");
 
@@ -19,294 +120,220 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      closeAllItems();
+      helpers.closeAllItems();
       this.classList.add("open");
     });
-  });
 
-  if (wrap) {
-    wrap.addEventListener("click", function (e) {
-      // Исключаем клики по модальному окну и его содержимому
-      if (!e.target.closest(".list_item") && !e.target.closest(".modal_wrap")) {
-        closeAllItems();
+    if (elements.wrap) {
+      elements.wrap.addEventListener("click", function (e) {
+        if (!e.target.closest(".list_item")) {
+          helpers.closeAllItems();
+        }
+      });
+    }
+  }
+
+  /** Настройка главного меню */
+  function setupMainMenu() {
+    const { button, wrap, overlay, closeBtn } = elements.mainMenu;
+    if (!button || !wrap) return;
+
+    // Элементы, к которым нужно добавить класс при открытии меню
+    const affectedElements = [
+      wrap, // .main_menu_wrap (оригинальный элемент)
+      document.querySelector(".list_items_wrap"),
+      document.querySelector(".list_form_create_btn"),
+      document.querySelector(".nav_wrap"),
+    ].filter((el) => el); // Фильтруем null (если элементы не найдены)
+
+    const toggleMenu = (open) => {
+      // Добавляем/удаляем класс всем указанным элементам
+      affectedElements.forEach((el) =>
+        el.classList.toggle("main_menu_open", open)
+      );
+      elements.body.classList.toggle("menu_open", open);
+    };
+
+    const handleMenuClick = (e) => {
+      e.stopPropagation();
+      toggleMenu(!wrap.classList.contains("main_menu_open"));
+    };
+
+    const handleClose = (e) => {
+      e?.stopPropagation();
+      toggleMenu(false);
+    };
+
+    const handleOutsideClick = (e) => {
+      if (
+        !e.target.closest(".main_menu_wrap") &&
+        !e.target.closest("#main_menu") &&
+        wrap.classList.contains("main_menu_open")
+      ) {
+        handleClose();
       }
+    };
+
+    button.addEventListener("click", handleMenuClick);
+    closeBtn?.addEventListener("click", handleClose);
+    overlay?.addEventListener("click", handleClose);
+    document.addEventListener("click", handleOutsideClick);
+  }
+
+  /** Настройка формы добавления задачи */
+  function setupItemForm() {
+    if (!elements.form.wrap) return;
+
+    elements.form.openBtn?.addEventListener("click", () => {
+      elements.form.wrap.classList.add("open_form");
+    });
+
+    elements.form.closeBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        elements.form.wrap.classList.remove("open_form");
+      });
     });
   }
 
-  // ===== Модальное окно =====
-  const modalTriggers = document.querySelectorAll(".modal");
-  const modalCloseButtons = document.querySelectorAll(".modal_close");
-  const modalWrap = document.querySelector(".modal_wrap");
+  /** Настройка переключателя темы */
+  function setupThemeSwitcher() {
+    if (!elements.themeToggle) return;
 
-  if (modalWrap) {
-    modalTriggers.forEach((trigger) => {
-      trigger.addEventListener("click", (e) => {
-        e.stopPropagation(); // Предотвращаем всплытие до wrap
-        modalWrap.classList.toggle("modal_open");
-      });
-    });
+    const applyInitialTheme = () => {
+      const savedTheme = localStorage.getItem("theme");
+      const systemPrefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      document.documentElement.setAttribute(
+        "data-theme",
+        savedTheme || (systemPrefersDark ? "dark" : "light")
+      );
+    };
 
-    modalCloseButtons.forEach((closeButton) => {
-      closeButton.addEventListener("click", (e) => {
-        e.stopPropagation(); // Предотвращаем всплытие до wrap
-        modalWrap.classList.remove("modal_open");
-      });
-    });
-
-    modalWrap.addEventListener("click", (e) => {
-      if (e.target === modalWrap) {
-        modalWrap.classList.remove("modal_open");
-      }
-    });
-  }
-
-  // ===== Переключатель темы =====
-  const applyInitialTheme = () => {
-    const savedTheme = localStorage.getItem("theme");
-    const systemPrefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    document.documentElement.setAttribute(
-      "data-theme",
-      savedTheme || (systemPrefersDark ? "dark" : "light")
-    );
-  };
-
-  applyInitialTheme();
-
-  // ===== Временное отключение переходов =====
-  const disableTransitionsTemporarily = () => {
-    const elements = document.querySelectorAll("*");
-    const originalTransitions = [];
-
-    elements.forEach((el) => {
-      const styles = window.getComputedStyle(el);
-      const transitionDuration = styles.transitionDuration;
-      const transitionDelay = styles.transitionDelay;
-
-      if (transitionDuration !== "0s" || transitionDelay !== "0s") {
-        originalTransitions.push({
-          element: el,
-          duration: transitionDuration,
-          delay: transitionDelay,
-        });
-        el.style.transition = "none"; // Отключаем ВСЕ переходы (оптимизация)
-      }
-    });
-
-    setTimeout(() => {
-      originalTransitions.forEach((item) => {
-        item.element.style.transition = ""; // Восстанавливаем исходные transition
-      });
-    }, 50);
-  };
-
-  // ===== Переключение темы с отключением анимаций =====
-  const themeToggle = document.getElementById("theme_toggle");
-  if (themeToggle) {
-    themeToggle.addEventListener("click", () => {
-      // 1. Отключаем переходы
-      disableTransitionsTemporarily();
-
-      // 2. Меняем тему
+    elements.themeToggle.addEventListener("click", () => {
+      helpers.disableTransitions();
       const currentTheme = document.documentElement.getAttribute("data-theme");
       const newTheme = currentTheme === "light" ? "dark" : "light";
       document.documentElement.setAttribute("data-theme", newTheme);
       localStorage.setItem("theme", newTheme);
     });
+
+    applyInitialTheme();
   }
 
-  // ===== Modal menu =====
-
-  // Обработчик клика по кнопке открытия меню
-  // Общие переменные и константы
-  const MENU_HTML = `
+  /** Настройка контекстного меню */
+  function setupContextMenu() {
+    const MENU_HTML = `
       <div class="menu_modal_wrap">
         <ul class="menu_modal">
-          <li class="menu_modal_item">копировать задачу</li>
-          <li class="menu_modal_item">перенести на другую дату</li>
-          <li class="menu_modal_item">удалить</li>
+          <li class="menu_modal_item">Копировать задачу</li>
+          <li class="menu_modal_item">Перенести на другую дату</li>
+          <li class="menu_modal_item">Удалить</li>
         </ul>
       </div>
     `;
 
-  // Главный обработчик кликов
-  document.addEventListener("click", function (e) {
-    const btn = e.target.closest(".menu_modal_btn_open");
-    if (btn) {
-      handleMenuOpen(btn);
-      return;
+    let currentMenu = null;
+
+    function createMenu(btn) {
+      closeMenu();
+      elements.body.insertAdjacentHTML("beforeend", MENU_HTML);
+      currentMenu = elements.body.lastElementChild;
+      const menuModal = currentMenu.querySelector(".menu_modal");
+
+      setTimeout(() => currentMenu.classList.add("active"), 10);
+
+      const btnRect = btn.getBoundingClientRect();
+      const rightPosition = window.innerWidth - btnRect.right;
+      Object.assign(menuModal.style, {
+        position: "fixed",
+        top: `${btnRect.bottom + window.scrollY}px`,
+        right: `${rightPosition}px`,
+        zIndex: "1001",
+      });
+
+      const handleOutsideClick = (e) => {
+        if (
+          !e.target.closest(".menu_modal") &&
+          !e.target.closest(".menu_modal_btn_open")
+        ) {
+          closeMenu();
+        }
+      };
+
+      document.addEventListener("click", handleOutsideClick);
+      currentMenu._outsideClickHandler = handleOutsideClick;
     }
 
-    if (e.target.closest(".menu_modal_item")) {
-      handleMenuItemClick(e);
-      return;
+    function closeMenu() {
+      if (!currentMenu) return;
+      currentMenu.classList.remove("active");
+
+      const cleanup = () => {
+        if (!currentMenu) return;
+        document.removeEventListener("click", currentMenu._outsideClickHandler);
+        currentMenu.remove();
+        currentMenu = null;
+      };
+
+      currentMenu.addEventListener("transitionend", cleanup, { once: true });
+      setTimeout(cleanup, 300);
     }
-  });
 
-  // Функция открытия меню
-  function handleMenuOpen(btn) {
-    closeExistingMenu();
-
-    document.body.insertAdjacentHTML("beforeend", MENU_HTML);
-    const menuWrap = document.body.lastElementChild;
-    const menuModal = menuWrap.querySelector(".menu_modal");
-
-    setTimeout(() => menuWrap.classList.add("active"), 10);
-    positionMenuRight(btn, menuModal);
-    setupCloseHandlers(menuWrap, btn);
-  }
-
-  // Функция обработки клика по пункту меню
-  function handleMenuItemClick(e) {
-    const menuItem = e.target.closest(".menu_modal_item");
-    console.log(`Выбран пункт: ${menuItem.textContent}`);
-    closeExistingMenu();
-  }
-
-  // Функция позиционирования меню
-  function positionMenuRight(btn, menuModal) {
-    const btnRect = btn.getBoundingClientRect();
-    const rightPosition = window.innerWidth - btnRect.right;
-
-    Object.assign(menuModal.style, {
-      position: "fixed",
-      top: `${btnRect.bottom + window.scrollY}px`,
-      right: `${rightPosition}px`,
-      zIndex: "1001",
-    });
-  }
-
-  // Функция закрытия меню
-  function closeExistingMenu() {
-    const existingMenu = document.querySelector(".menu_modal_wrap");
-    if (!existingMenu) return;
-
-    existingMenu.classList.remove("active");
-
-    const cleanup = () => {
-      existingMenu.remove();
-      if (existingMenu._resizeHandler) {
-        window.removeEventListener("resize", existingMenu._resizeHandler);
+    helpers.delegateEvent(
+      "click",
+      ".menu_modal_btn_open:not(.disabled)",
+      function (e) {
+        if (this.classList.contains("disabled")) return;
+        e.stopPropagation();
+        createMenu(this);
       }
-      if (existingMenu._outsideClickHandler) {
-        document.removeEventListener(
-          "click",
-          existingMenu._outsideClickHandler
-        );
-      }
-    };
-
-    // Ждем завершения анимации или удаляем сразу, если transition не поддерживается
-    const onTransitionEnd = () => cleanup();
-    existingMenu.addEventListener("transitionend", onTransitionEnd, {
-      once: true,
-    });
-
-    // Fallback на случай, если transition не сработает
-    setTimeout(cleanup, 300);
-  }
-
-  // Настройка обработчиков закрытия
-  function setupCloseHandlers(menuWrap, btn) {
-    // Обработчик ресайза
-    const handleResize = () => {
-      positionMenuRight(btn, menuWrap.querySelector(".menu_modal"));
-    };
-    window.addEventListener("resize", handleResize);
-    menuWrap._resizeHandler = handleResize;
-
-    // Обработчик клика вне меню
-    const handleOutsideClick = (e) => {
-      if (
-        !e.target.closest(".menu_modal") &&
-        !e.target.closest(".menu_modal_btn_open")
-      ) {
-        closeExistingMenu();
-      }
-    };
-    document.addEventListener("click", handleOutsideClick);
-    menuWrap._outsideClickHandler = handleOutsideClick;
-
-    // Обработчик клика по оверлею
-    menuWrap.addEventListener("click", (e) => {
-      if (e.target === menuWrap) closeExistingMenu();
-    });
-  }
-
-  // ===== Notes =====
-
-  // Находим все элементы .notes_switch
-  document.addEventListener("click", (e) => {
-    // Проверяем, был ли клик по элементу .notes_switch или его потомку
-    const switchElement = e.target.closest(".notes_switch");
-    if (switchElement) {
-      // Переключаем класс edit у ближайшего родителя .section_notes
-      const sectionNotes = switchElement.closest(".section_notes");
-      sectionNotes?.classList.toggle("open");
-    }
-  });
-
-  // ===== Проверка поддержки CSS =====
-
-  function checkCSSSupport(property, testValue = "", withPrefixes = true) {
-    const el = document.createElement("div").style;
-    const prefixes = withPrefixes
-      ? ["", "-webkit-", "-moz-", "-ms-", "-o-"]
-      : [""];
-
-    return prefixes.some((prefix) => {
-      const prop = prefix + property;
-      if (!(prop in el)) return false;
-      if (!testValue) return true;
-
-      try {
-        el[prop] = testValue;
-        return el[prop] === testValue;
-      } catch {
-        return false;
-      }
-    });
-  }
-  // Переключеие отображения формы для создания list_item
-  const openBtn = document.querySelector(".list_form_create_btn");
-  const closeBtns = document.querySelectorAll(".close_form"); // Получаем все кнопки закрытия
-  const formWrap = document.querySelector(".list_item_form_wrap");
-
-  if (formWrap) {
-    // Открытие формы (если кнопка существует)
-    openBtn?.addEventListener("click", () =>
-      formWrap.classList.add("open_form")
     );
 
-    // Закрытие формы (обработчик для каждой кнопки .close_form)
-    closeBtns.forEach((btn) => {
-      btn.addEventListener("click", () =>
-        formWrap.classList.remove("open_form")
-      );
+    helpers.delegateEvent("click", ".menu_modal_item", function () {
+      closeMenu();
     });
   }
 
-  // Проверки поддержки (можно вынести в отдельный файл)
-  const willChangeSupported = checkCSSSupport("willChange");
-  console.log(
-    `Поддержка will-change: ${willChangeSupported ? "✅ Да" : "❌ Нет"}`
-  );
+  /** Настройка заметок к задачам */
+  function setupNotes() {
+    helpers.delegateEvent(
+      "click",
+      ".notes_switch:not(.disabled)",
+      function (e) {
+        if (this.classList.contains("disabled")) return;
+        this.closest(".section_notes")?.classList.toggle("open");
+      }
+    );
+  }
 
-  const colorContrastSupported =
-    CSS.supports?.("color", "color-contrast(red vs white, black)") ??
-    checkCSSSupport("color", "color-contrast(red vs white, black)", false);
-  console.log(
-    `Поддержка color-contrast: ${colorContrastSupported ? "✅ Да" : "❌ Нет"}`
-  );
+  /** Проверка поддерживаемых браузером функций */
+  function checkFeaturesSupport() {
+    const features = {
+      willChange: helpers.checkCSSSupport("willChange"),
+      colorContrast:
+        CSS.supports?.("color", "color-contrast(red vs white, black)") ||
+        helpers.checkCSSSupport(
+          "color",
+          "color-contrast(red vs white, black)",
+          false
+        ),
+      clipPath: helpers.checkCSSSupport("clip-path", "path('M0 0')"),
+      hwb:
+        CSS.supports?.("color", "hwb(120 0% 0%)") ||
+        helpers.checkCSSSupport("color", "hwb(120 0% 0%)", false),
+    };
 
-  const clipPathPathSupported = checkCSSSupport("clip-path", "path('M0 0')");
-  console.log(
-    `Поддержка clip-path: path(): ${clipPathPathSupported ? "✅ Да" : "❌ Нет"}`
-  );
+    console.log("Поддержка функций:");
+    console.table(features);
+  }
 
-  const hwbSupported =
-    CSS.supports?.("color", "hwb(120 0% 0%)") ??
-    checkCSSSupport("color", "hwb(120 0% 0%)", false);
-  console.log(`Поддержка HWB цветов: ${hwbSupported ? "✅ Да" : "❌ Нет"}`);
+  // ===== Инициализация приложения =====
+  setupListItems();
+  setupMainMenu();
+  setupItemForm();
+  setupThemeSwitcher();
+  setupContextMenu();
+  setupNotes();
+  checkFeaturesSupport();
 });
